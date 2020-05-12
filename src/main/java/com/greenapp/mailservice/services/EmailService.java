@@ -43,13 +43,7 @@ public class EmailService extends Authenticator {
 
             //todo change text to html
             message.setText(String.format(
-                    """ 
-                            Your verification code:  %s
-                                                       
-                            Regards, 
-                            GreenApp team.
-                                         
-                            """
+                    "Your verification code: %s \nRegards,\nGreenApp team."
                     , user.getTwoFaCode()));
 
             Transport.send(message);
