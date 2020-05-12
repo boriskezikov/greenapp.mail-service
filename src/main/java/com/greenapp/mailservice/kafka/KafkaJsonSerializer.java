@@ -24,6 +24,7 @@ public class KafkaJsonSerializer<T> extends JsonSerializer<T> {
                 result = this.objectMapper.readerFor(typeReference).readValue(data);
             }
             return result;
+
         } catch (IOException ex) {
             throw new SerializationException("Can't deserialize data [" + data + "] for topic [" + topic + "]", ex);
 
