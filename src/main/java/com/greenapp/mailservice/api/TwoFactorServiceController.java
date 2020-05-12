@@ -22,7 +22,6 @@ public class TwoFactorServiceController {
     @Async
     @GetMapping("/{emailId}")
     public CompletableFuture<ResponseEntity<Void>> send2faCodeInEmail(@PathVariable("emailId") String emailId) {
-        emailService.sendEmail(emailId);
         return CompletableFuture.completedFuture(new ResponseEntity<>(HttpStatus.OK));
     }
 
