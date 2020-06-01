@@ -14,16 +14,16 @@ public class StateAliveController {
         System.out.println("Leave request accepted.");
     }
 
-    @Scheduled(cron = "* */15 * * * *")
-    public void keepGatewayAlivePlease() {
-
-        var restTemplate = new RestTemplate();
-        restTemplate.exchange(
-                "https://greenapp-gateway.herokuapp.com/live",
-                HttpMethod.GET,
-                null,
-                Void.class
-        );
-        System.out.println("Sent alive");
-    }
+//    @Scheduled(cron = "* */15 * * * *")
+//    public void keepGatewayAlivePlease() {
+//
+//        var restTemplate = new RestTemplate();
+//        restTemplate.exchange(
+//                "https://greenapp-gateway.herokuapp.com/live",
+//                HttpMethod.GET,
+//                null,
+//                Void.class
+//        );
+//        System.out.println("Sent alive");
+//    }
 }
