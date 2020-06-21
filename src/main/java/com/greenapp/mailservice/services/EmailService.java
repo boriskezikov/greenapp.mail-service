@@ -29,7 +29,7 @@ public class EmailService extends Authenticator {
     @Async
     public void send2Fa(TwoFaDTO user) {
 
-        Session session = Session.getInstance(propsProvider.getMailProps(), new Authenticator() {
+        var session = Session.getInstance(propsProvider.getMailProps(), new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(USERNAME, PASSWORD);
@@ -41,7 +41,6 @@ public class EmailService extends Authenticator {
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(user.getMail()));
             message.setSubject("Green App auth");
 
-            //todo change text to html
             message.setText(String.format(
                     "Your verification code: %s \nRegards,\nGreenApp team."
                     , user.getTwoFaCode()));
