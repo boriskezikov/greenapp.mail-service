@@ -1,0 +1,11 @@
+package com.greenapp.mailservice.dto;
+
+import lombok.Data;
+
+@Data
+public class CredentialsDTO {
+
+    private String username;
+    private String password;
+
+}

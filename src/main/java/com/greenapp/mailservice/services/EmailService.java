@@ -1,5 +1,6 @@
 package com.greenapp.mailservice.services;
 
+import com.greenapp.mailservice.dto.CredentialsDTO;
 import com.greenapp.mailservice.dto.TwoFaDTO;
 import com.greenapp.mailservice.config.MailPropsProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -29,14 +30,8 @@ public class EmailService extends Authenticator {
     @Async
     public void send2Fa(TwoFaDTO user) {
 
-        var session = Session.getInstance(propsProvider.getMailProps(), new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(USERNAME, PASSWORD);
-            }
-        });
         try {
-            MimeMessage message = new MimeMessage(session);
+            MimeMessage message = new MimeMessage(getSession());
             message.setFrom(new InternetAddress(USERNAME));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(user.getMail()));
             message.setSubject("Green App auth");
@@ -49,5 +44,36 @@ public class EmailService extends Authenticator {
         } catch (MessagingException e) {
             log.error(e.getMessage());
         }
+    }
+
+    public void resetPassword(CredentialsDTO creds) {
+
+        try {
+            MimeMessage message = new MimeMessage(getSession());
+            message.setFrom(new InternetAddress(USERNAME));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(creds.getUsername()));
+            message.setSubject("GreenApp Password changed");
+
+            message.setText(String.format(
+                    "Hi! Your password has been updated!" +
+                            "\nYour credentials now: " +
+                            "\n\tUsername: %s" +
+                            "\n\tPassword: %s  " +
+                            "\nRegards,\nGreenApp team."
+                    , creds.getUsername(), creds.getPassword()));
+
+            Transport.send(message);
+        } catch (MessagingException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    private Session getSession() {
+        return Session.getInstance(propsProvider.getMailProps(), new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(USERNAME, PASSWORD);
+            }
+        });
     }
 }
