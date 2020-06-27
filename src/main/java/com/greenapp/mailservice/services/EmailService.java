@@ -1,6 +1,7 @@
 package com.greenapp.mailservice.services;
 
 import com.greenapp.mailservice.dto.CredentialsDTO;
+import com.greenapp.mailservice.dto.RewardMailDTO;
 import com.greenapp.mailservice.dto.TwoFaDTO;
 import com.greenapp.mailservice.config.MailPropsProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -67,6 +68,30 @@ public class EmailService extends Authenticator {
             log.error(e.getMessage());
         }
     }
+
+    public void sendConfirmation(RewardMailDTO rewardMailDTO) {
+        try {
+            MimeMessage message = new MimeMessage(getSession());
+            message.setFrom(new InternetAddress(USERNAME));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(rewardMailDTO.getMailAddress()));
+            message.setSubject("GreenApp Confirmation");
+
+            message.setText(String.format(
+                    "Dear %s! You have successfully bought reward item: %s" +
+                            "\n\tYour item price: %s " +
+                            "\n\tDescription: %s" +
+                            "\nRegards,\nGreenApp team."
+                    , rewardMailDTO.getSurname() + rewardMailDTO.getName(),
+                    rewardMailDTO.getRewardTitle(),
+                    rewardMailDTO.getRewardPrice(),
+                    rewardMailDTO.getRewardDescription()));
+
+            Transport.send(message);
+        } catch (MessagingException e) {
+            log.error(e.getMessage());
+        }
+    }
+
 
     private Session getSession() {
         return Session.getInstance(propsProvider.getMailProps(), new Authenticator() {
